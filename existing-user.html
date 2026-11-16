@@ -653,7 +653,8 @@ body.nu-home #s-home .hbody .sect:first-child{padding-top:0!important}
 #s-home .sect:first-of-type{padding-top:88px!important}
 #s-home::after,#s-ftab::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:141px;z-index:5;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,0) 0,#FFFFFF 100px,#FFFFFF 100%)}
 .ce-sw{display:flex;flex-wrap:wrap;gap:var(--spacing-md);margin-top:var(--spacing-md)}
-.ce-sw button{width:36px;height:36px;border-radius:50%;border:0;padding:0;position:relative}
+.ce-sw button{width:48px;height:48px;border-radius:50%;border:0;padding:0;position:relative}
+#ce-done{min-width:48px;height:48px;border-radius:24px}
 .ce-sw button.on::after{content:"";position:absolute;inset:-4px;border-radius:50%;box-shadow:0 0 0 2px var(--colors-primary)}
 
 .ce-h button{background:var(--colors-surface)!important;color:var(--colors-on-surface)!important}.ce-h button.on{background:var(--colors-primary)!important;color:var(--colors-neutral)!important}
@@ -1338,6 +1339,7 @@ Google로 시작하기
     <div class="topbar fp-top"><button class="fp-ib cat-back" data-go="cat" aria-label="뒤로"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#111114" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><b class="fp-t" id="ce-title"></b><span style="width:44px"></span></div>
     <div class="scroll" style="padding:0 var(--spacing-page-margin) 160px">
       <div class="cat-lab ce-t">이름</div>
+      <label for="ce-n" id="ce-n-lab" style="display:block;font-size:14px;line-height:20px;font-weight:700;color:var(--colors-on-surface);margin:0 0 8px 4px">카테고리 이름</label>
       <label class="ce-name"><i id="ce-dot"></i><input id="ce-n" maxlength="10"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B6B76" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></label>
       <div class="cat-lab ce-t">색상</div><div class="ce-sw" id="ce-sw"></div>
       <div class="ce-h"><b>필터 수정</b><button id="ce-done">수정</button></div>
