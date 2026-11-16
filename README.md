@@ -9,6 +9,7 @@
 
 ## 디자인 문서
 
+- `AGENTS.md` — 코딩 에이전트(Codex·Claude Code)가 가장 먼저 읽는 작업 안내. 읽을 순서·작업 규칙·확인 방법
 - `DESIGN.md` — 색·글자·간격·모서리·그림자 토큰과 컴포넌트·화면 규칙 (9주차, 구글 design.md 형식)
 - `VOICE.md` — 보이스앤톤, 문장 규칙, 용어집, 상황별 톤 (10주차 UX 라이팅)
 - `accessibility-guide.md` — WCAG 2.2 AA 기준과 Simpic 접근성 규칙
