@@ -1744,7 +1744,7 @@ const DATA={
   tabs:['베스트컷','좋아요','인물별','날짜','장소','음식·풍경','올린 사람'],pool:['sk04','sk33','sk28','sk24','sk12','sk36','sk02','sk39','sk10','sk35','sk22','sk14'],
   days:['10.03','10.04','10.05'],wd:['금','토','일'],secs:[[0,14,0,'제주공항'],[0,18,30,'숙소'],[1,10,20,'협재 해변'],[1,15,0,'카페'],[1,20,10,'시내'],[2,11,0,'동문시장']],
   map:{area:'제주시',land:['협재 해변','한림','애월','제주공항']}},
- 취미:{label:'취미',pal:'pink',name:'최애 굿즈 기록',s:'2026.10.12',e:'10.20',n:312,ppl:3,cover:'cf08',m:['cf14','cf19'],
+ 취미:{label:'취미',pal:'pink',name:'팝업스토어 투어',s:'2026.10.12',e:'10.20',n:312,ppl:3,cover:'cf08',m:['cf14','cf19'],
   tabs:['베스트컷','좋아요','인물별','날짜','올린 사람'],pool:['cf08','cf06','cf10','cf12','cf03','cf05','cf13','cf16','cf19'],
   days:['10.12','10.15','10.20'],wd:['일','수','월'],secs:[[0,13,0,'팝업스토어'],[0,17,40,'굿즈샵'],[1,19,0,'콘서트장'],[1,22,10,'홍대 거리'],[2,12,30,'콜라보 카페']],
   map:{area:'마포구',land:['홍대입구','합정','연남동','상수']}},
@@ -1819,7 +1819,7 @@ function renderBody(){const d=D(),t=state.tab,ps=PS;let h='';
   <div class="tile" style="left:10px;top:26px;transform:rotate(-8deg);background-image:${img(s[1].k)}"></div>
   <div class="tile" style="right:10px;top:26px;transform:rotate(8deg);background-image:${img(s[2].k)}"></div>
   <div class="tile" style="left:50%;margin-left:-64px;top:6px;z-index:2;background-image:${img(s[0].k)}"></div></div>
-  <div class="st">${state.p==='취미'?'최애가 잘 나온 사진':state.p==='기타'?'구도가 좋은 사진':state.p==='업무'?'자료가 잘 보이는 사진':'모두가 잘 나온 사진'}</div>${grid(s.slice(3,9))}
+  <div class="st">${state.p==='취미'?'좋아하는 순간이 잘 담긴 사진':state.p==='기타'?'구도가 좋은 사진':state.p==='업무'?'자료가 잘 보이는 사진':'모두가 잘 나온 사진'}</div>${grid(s.slice(3,9))}
   <div class="st">${state.p==='업무'?'현장이 잘 담긴 사진':'분위기가 잘 담긴 사진'}</div>${grid(s.slice(9,18))}
   <button class="mkbest" onclick="parent.postMessage({type:'simpic-photo',doc:false},'*')"><span class="mi"><svg viewBox="0 0 24 24"><path d="M12 2c.6 4.9 2.6 7.4 8 8.3v1.4c-5.4.9-7.4 3.4-8 8.3h-1.4c-.6-4.9-2.6-7.4-8-8.3v-1.4c5.4-.9 7.4-3.4 8-8.3z" fill="currentColor"/></svg></span><span class="mt"><b>마음에 드는 사진이 없나요?</b><small>사진을 골라 나만의 베스트컷을 만들어 보세요</small></span></button>`}
  else if(t==='좋아요'){const s=ps.filter(p=>p.likes>0);h=`<div class="lkmode" style="--lkimg:url(${LIKE3D[D().label]||LIKE3D.취미})">${byTime(s)}</div>`}
@@ -3477,7 +3477,7 @@ function resetCreate(){const now=new Date();now.setSeconds(0,0);
   $('#pw-box').hidden=true;$('#grp-box').hidden=true;closePicker();$('#sc1').scrollTop=0;
   renderPurpose();renderPeriod();renderPin();renderGroups();validate();
   S.active=[];S.extra=[];}
-const KW=[['취미',/콘서트|생카|생일카페|팝업|취미|덕질|팬미팅|콜라보|굿즈|최애|ㅈㄷ/],['업무',/회의|답사|프로젝트|촬영|워크숍|세미나|업무|출장|미팅/],['친목',/여행|MT|엠티|모임|파티|생일|우정|동아리|술|여름|가을|친구/]];
+const KW=[['취미',/콘서트|생카|생일카페|팝업|취미|덕질|팬미팅|콜라보|굿즈|최애|ㅈㄷ|공연|전시|클래스|원데이|공방|러닝|클라이밍|등산|운동|독서|그림/],['업무',/회의|답사|프로젝트|촬영|워크숍|세미나|업무|출장|미팅/],['친목',/여행|MT|엠티|모임|파티|생일|우정|동아리|술|여름|가을|친구/]];
 let nameT=0;
 $('#name').addEventListener('input',e=>{S.name=e.target.value;$('#name-c').textContent=`${S.name.length}/20`;
   clearTimeout(nameT);
