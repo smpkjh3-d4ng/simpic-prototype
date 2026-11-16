@@ -2,6 +2,8 @@
 
 > DESIGN.md의 Components 섹션이 가리키는 문서예요. 컴포넌트 이름·variant·속성과 쓰는 법을 적어요.
 > 출처: Figma `디자인md 수정` 페이지 › `Components(수정용)` 섹션 (node 1580:955). 각 컴포넌트의 설명(description)과 속성(component properties)을 그대로 옮겼어요. (2026-11-16 기준)
+> Figma 컴포넌트는 2026-11-14 기준이에요. 그 뒤 GitHub 최신 프로토타입(2026-11-16)에서 바뀐 점은 각 항목과 맨 아래 표에 함께 적었어요.
+> **카테고리 이름:** Figma variant 값의 `덕질`은 지금 앱에서 **취미**예요(2026-11-16 변경). 코드와 문서에서는 취미로 불러요.
 > 값(색·글자·간격·모서리·그림자)은 DESIGN.md의 토큰 이름으로만 적어요. 이 문서와 DESIGN.md가 다르면 **DESIGN.md(최종 프로토타입 기준)를 따라요.** 서로 다른 곳은 맨 아래 "Figma와 DESIGN.md가 다른 곳"에 모았어요.
 
 ## 읽는 법
@@ -90,7 +92,7 @@
 - `Icon/close` · `back` · `more` · `search` · `history` · `download` · `plus` · `sparkle` · `chevron-right` · `arrow-up` · `heart` · `comment` · `share` · `grid` · `filter` · `album` · `friends` (24 기준)
 - **Icon/bestcut** — `Color(V)` Pink | Green | Purple. 베스트컷 심볼(꽃). 꽃잎마다 카테고리 옅은 색 → 기본색 그라데이션, 불투명도 70%. 브랜드 심볼이라 흰색·검정으로 덮어쓰지 않아요.
 - **Icon/like** — `Color(V)` Pink | Green | Purple. 좋아요 3D 유리 8각 배지(꽃 배지). 앨범 카테고리 색에 맞춰 고르고, 흰색·검정으로 덮어쓰지 않아요.
-- 카테고리와 색: 덕질(취미)=Pink, 업무=Green, 친목=Purple.
+- 카테고리와 색: 취미(Figma 값 `덕질`)=Pink, 업무=Green, 친목=Purple. 기타와 사용자가 추가한 카테고리는 Figma variant가 없고, 프로토타입에서 고른 색(기타는 Outline)으로 칠해요.
 
 ### Chip
 - **속성:** `Theme(V)` Light | Dark · `State(V)` Default | Selected | All | Pressed | Disabled · `Label(T)` ("베스트컷") · `Show Icon(B)` (false) · `Icon(Swap)`
@@ -136,12 +138,12 @@
 ### Album Card
 - **속성:** `Category(V)` 덕질 | 업무 | 친목 · `Title(T)` ("생일카페 투어") · `Meta(T)` ("11.01부터 · 86장") · `More Count(T)` ("+83")
 - **모양:** 폭 372, 여백 16, `rounded.md`, 카테고리 옅은 색 바탕. 위: 기울어진 사진 3장(−9°~+9°) + More 카드(옅은 색 → `neutral` 그라데이션, `+83`은 카테고리 기본색 `headline-md`). 아래: 제목(`headline-md`) → 카테고리(`label-md`, 기본색) ' | ' 날짜(`label-md`, `secondary`) + 오른쪽 아래 Avatar Stack. 카드 사이 12 (`md`).
-- **규칙:** 장수는 쓰지 않아요(DESIGN.md). 카테고리 글자가 4.5:1에 못 미치는 색(Pink·Green)은 글자용 색을 써요(accessibility-guide.md 7장).
+- **규칙:** 장수는 쓰지 않아요(DESIGN.md). 카테고리 라벨 글자는 `pink-text`(취미)·`green-text`(업무)·`purple`(친목)을 써요. 취미 `+83`은 `pink-vivid`. 사용자가 추가한 카테고리는 고른 색으로 바탕·라벨·`+N`을 만들어요(DESIGN.md Colors).
 
 ### Avatar Stack
 - **속성:** `Style(V)` Pink | Green | Purple · `Count(T)` ("+4")
-- 앨범 카드용: 30px 원형, −8 겹침, 흰 테두리 2, 마지막 `+N` 배지는 카테고리 기본색 + 흰 `body-sm`.
-- 그룹 행용: 32px, −9 겹침, `surface` 테두리.
+- 앨범 카드용: 30px 원형, −8 겹침, 흰 테두리 2, 마지막 `+N` 배지는 카테고리 기본색 바탕 + `body-sm` 숫자(취미·업무는 검정, 친목은 흰색 — 대비가 높은 쪽).
+- 그룹 행용: 32px, −9 겹침, `surface` 테두리, `+N` 배지는 Green 바탕 + 검정 숫자.
 
 ### Group Row
 - 그룹 목록 행. 높이 70, `surface` 바탕, `rounded.md`, 좌우 16. 그룹 이름(`body-md`) + 메타(`body-sm`, `secondary`) + 아바타 + 오른쪽 화살표. 행 사이 8 (`sm`).
@@ -166,6 +168,7 @@
 - **속성:** `Category(V)` 덕질 | 업무 | 친목 · `Title(T)` · `Date(T)`
 - 카테고리 옅은 색 → `neutral-subtle` 그라데이션 위에 꽃 그래픽 에셋 2장(오른쪽 위 110×192, 왼쪽 80×144, 원본 그대로) + 위에서부터 제목(`headline-lg`, 가운데) → 카테고리(`label-md`, 기본색)·날짜(`label-md`, `secondary`) → 사진 콜라주.
 - 장식 오브젝트는 카테고리별 에셋으로 바꾸고 토큰 색으로 칠하지 않아요. 장식은 스크린리더가 건너뛰게 해요.
+- Figma에는 취미(덕질)·업무·친목 3개만 있어요. 프로토타입에서는 기타(회색 그래픽)와 사용자가 추가한 카테고리(기본 그래픽을 흰색 위 고른 색 약 12% 파스텔로 다시 칠함)도 그래픽을 보여 줘요.
 
 ### 앨범 상단 · 친목
 - 앨범 상세 상단 전체(친목 기준): 상태바 + 뒤로·더보기(Translucent 44) + 제목·카테고리 줄 + 대표 사진 콜라주 + Stats Card + 필터 줄. 폭 412.
@@ -180,7 +183,7 @@
 
 ### Top 3 Stack
 - 128×178 카드 3장, 흰 테두리 2.5, `rounded.md`, `shadow-sm`, 양옆 ±8° 기울기, 뒤쪽일수록 흐리게(80%·50%). 사진은 인스턴스에서 바꿔요.
-- 섹션 제목은 '반응이 가장 많은 사진'(VOICE.md 6장).
+- 섹션 제목은 '반응이 가장 많은 사진'(VOICE.md 6장). 카테고리별 다음 섹션 제목은 VOICE.md를 따라요(취미: '좋아하는 순간이 잘 담긴 사진').
 
 ### Photo Thumbnail · 사진 그리드
 - Photo Thumbnail: 정사각형, `rounded.md`. 이미지는 인스턴스에서 바꿔요.
@@ -205,9 +208,10 @@
 - 베스트컷·사진 상세의 큰 사진 캔버스. `rounded.lg`, 폭 372, 화면에 남는 높이를 채워요.
 
 ### Prompt Input
-- 베스트컷 입력창. 높이 60 알약, 흰 20% 유리. 안내 글자 `white-alpha-40`(입력된 글자는 `dark.white`). 오른쪽 44×44 AI 생성 버튼(Pink → Pink Light 원형 그라데이션).
+- 베스트컷 입력창. 높이 60 알약, 흰 20% 유리. 안내 글자 `white-alpha-78`(2026-11-16, Figma는 `white-alpha-40`), 입력된 글자는 `dark.white`. 오른쪽 44×44 AI 생성 버튼(Pink → Pink Light 원형 그라데이션).
 - **Loading(B, 기본 꺼짐):** 켜면 AI 생성 버튼 위에 점 3개 오버레이. 생성 중 문구는 '지우는 중이에요…' 같은 현재형(VOICE.md "진행 중")으로 바꾸고 `white-alpha-40`으로 둬요.
-- **접근성:** 안내 글자도 정보를 주므로 어두운 바탕에서 읽히게 해요(사용성 테스트 7번 반영: 어두운 바탕 안내 글자는 흰색).
+- **접근성:** 안내 글자도 정보를 주므로 어두운 바탕에서 읽히게 해요(사용성 테스트 7번).
+- 얼굴이 없는 사진에는 얼굴 보정 AI 칩을 보여 주지 않아요.
 
 ---
 
@@ -220,7 +224,10 @@
 ## Figma에 컴포넌트가 없는 요소
 
 DESIGN.md에 규칙은 있지만 Figma 컴포넌트로는 아직 없는 것들이에요. 프로토타입 코드와 DESIGN.md를 기준으로 만들어요. `[팀 확인]`
-- Toggle (50×30, 켜짐 `primary`, 꺼짐 `border` + 3:1 이상 보이게)
+- Toggle (50×30, 켜짐 `primary`, 꺼짐 `outline` #8A8A92)
+- 홈 칩 줄의 '+ 카테고리' 칩과 '카테고리 설정' 태그 아이콘 버튼 (사용성 테스트 5번)
+- 앨범 만들기 진행 표시(1/4 ~ 4/4), 사진 확인 화면의 빠진 사진 이유 표시, '앨범이 만들어졌어요' 표시
+- 약관 동의 체크 목록과 조건 안내 글자
 - Bottom Sheet, 확인 창(모달), 토스트, 더보기 드롭다운 메뉴
 - 선택 바(전체 선택 · N장 선택됨 · 저장 · 지우기 · 닫기)
 - 날짜로 이동 휠, 입장 비밀번호 숫자 4칸 입력란, 검색 입력창
@@ -239,4 +246,9 @@ Figma 설명이 최종 프로토타입보다 예전 값으로 남아 있는 곳�
 | Stats Card | '참여자' | '함께한 사람' (VOICE.md 용어집) |
 | Avatar Stack Group | `+N` 배지 청록 #2E8C7E | `+N` 배지 Green (DESIGN.md 20색 밖의 값을 쓰지 않음) |
 | Icon Button · Chip · 버튼 Focus | iOS VoiceOver 기본 표시 | 기준 기기는 갤럭시(Android) → TalkBack 기본 표시 |
+| 카테고리 이름 (Album Hero · Album Card variant) | 덕질 | 취미 (2026-11-16) |
+| Album Card 카테고리 라벨 | 카테고리 기본색 | `pink-text`·`green-text` (Purple은 그대로) |
+| Avatar Stack `+N` 숫자 | 흰색 | 취미·업무는 검정 (대비) |
+| 위험 색 (`colors/danger`) | #E4444C | #D12F38 |
+| Prompt Input 안내 글자 | `white-alpha-40` | `white-alpha-78` |
 | Button / Bottom 기본 글자 | '사진 전체 다운로드' | 앨범 하단에 이 버튼을 두지 않음. 전체 저장은 더보기 › '전체 사진 저장하기' |
