@@ -2010,6 +2010,9 @@ window.addEventListener('message',e=>{const m=e.data;if(!m||m.type!=='simpic-ope
  if(m.name&&NDATA[m.name])Object.assign(d,JSON.parse(JSON.stringify(NDATA[m.name])));
  if(m.date){const pr=m.date.split('–').map(x=>x.trim());d.s='2026.'+pr[0];d.e=/^\d\d\.\d\d$/.test(pr[1]||'')?pr[1]:(pr[1]==='당일'?pr[0]:'')}
  if(typeof m.n==='number')d.n=m.n;
+  if(m.p&&k!==m.p)d.label=m.p; /* 새로 만든 카테고리 이름 그대로 표시 */
+  if(m.hex){const P0=PAL[d.pal];if(!P0||String(P0.sw).toUpperCase()!==String(m.hex).toUpperCase()){const id='h'+String(m.hex).replace('#','');if(!PAL[id]){const h=String(m.hex).replace('#',''),c=[0,2,4].map(i=>parseInt(h.substr(i,2),16)),l=c.map(v=>Math.round(255-(255-v)*.12));PAL[id]={n:'사용자 색',sw:m.hex,c1:'rgb('+l.join(',')+')',c2:'#F5F5F7',cx:m.hex,tint:'rgba('+l.join(',')+',.7)'};RIC[id]='flower'}d.pal=id}}
+  
  if(m.cover){P.ext=m.cover;d.cover='ext'}
  if(m.tabs&&m.tabs.length){const t=[];m.tabs.forEach(x=>{const y=FMAP[x]||x;if(!t.includes(y))t.push(y)});d.tabs=t}
  if(m.ppl)d.ppl=m.ppl;
@@ -3990,6 +3993,20 @@ const FACES=['d4','d8','d13'];
 let albums=[];
 /* DESIGN.md 카테고리 색 한 쌍 (기타·개인은 DESIGN.md에 한 쌍이 없어 중립 면으로 둠) */
 const CAT={취미:{c:'var(--colors-pink)',l:'var(--colors-pink-light)',t:'var(--colors-pink-text)',m:'var(--colors-pink-vivid)',b:'var(--colors-on-surface)'},업무:{c:'var(--colors-green)',l:'var(--colors-green-light)',t:'var(--colors-green-text)',m:'var(--colors-green)',b:'var(--colors-on-surface)'},친목:{c:'var(--colors-purple)',l:'var(--colors-purple-light)',t:'var(--colors-purple)',m:'var(--colors-purple)',b:'#fff'},기타:{c:'var(--colors-primary)',l:'var(--colors-surface)',t:'var(--colors-primary)',m:'var(--colors-primary)',b:'#fff'}};
+/* 카테고리 색: 기본 4개는 정해 둔 색표, 새로 만든(또는 색을 바꾼) 카테고리는 고른 색으로 만들어요.
+   바탕은 고른 색을 아주 연하게, 글자는 같은 색조로 진하게(4.5:1), 큰 숫자는 3:1 이상, 원 안 숫자는 흰색/검정 중 대비가 높은 쪽 */
+const CATHEX={취미:'#EE4F9F',업무:'#3A9F0A',친목:'#5B45D4',기타:'#6B6B76'};
+function _crgb(h){h=String(h).replace('#','');return [0,2,4].map(i=>parseInt(h.substr(i,2),16))}
+function _chex(a){return '#'+a.map(v=>Math.round(Math.max(0,Math.min(255,v))).toString(16).padStart(2,'0')).join('')}
+function _clum(a){const f=v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)};return .2126*f(a[0])+.7152*f(a[1])+.0722*f(a[2])}
+function _cratio(a,b){const x=_clum(a),y=_clum(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05)}
+function _cdark(a,bg,need){let c=a.slice();for(let i=0;i<80&&_cratio(c,bg)<need;i++)c=c.map(v=>v*.96);return c}
+function catOf(n){let C=null;try{C=CATS.find(x=>x.n===n)}catch(e){}const hex=C&&C.hex;
+  if(CAT[n]&&(!hex||hex.toUpperCase()===CATHEX[n]))return CAT[n];
+  if(!hex)return CAT[n]||CAT.기타;
+  const c=_crgb(hex),l=c.map(v=>255-(255-v)*.12);
+  return {c:hex,l:_chex(l),t:_chex(_cdark(c,l,4.5)),m:_chex(_cdark(c,l,3)),b:_cratio([255,255,255],c)>=_cratio([17,17,20],c)?'#fff':'var(--colors-on-surface)'};}
+
 CAT.개인=CAT.기타;
 const GROUPS=[];
 let homeAll=true,groupsAll=false;
@@ -4031,7 +4048,7 @@ function renderHome(){
   else if(!albums.length){box.className='albums';hc.hidden=true;box.innerHTML=`<div class="nu-card nu2"><div class="nu-ill" aria-hidden="true"><img class="c1" data-obi="262545" alt=""><img class="c2" data-obi="a9e826" alt=""><img class="f1" data-obi="f19454" alt=""><img class="f2" data-obi="647462" alt=""><img class="f3" data-obi="1d3a94" alt=""></div><h1 class="nu-t2">${(window.OB_NAME||'지민')}님,<br>첫 앨범을 만들어 볼까요?</h1><p class="nu-s2">함께 찍은 사진을 한 앨범에 모아요</p><div class="nu-btns"><button class="nu-new" onclick="document.getElementById('go-create').click()"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M10 4v12M4 10h12"/></svg><span>새 앨범 만들기</span></button><button class="nu-inv" onclick="window.NU_LATER=true;renderHome()">나중에</button></div></div>`;box.querySelectorAll('img[data-obi]').forEach(m=>{if(window.OBI)m.src=window.OBI[m.dataset.obi]})}
   if(!albums.length){const sb=document.querySelector('#go-create .nb-badge'),tb=box.querySelector('.nu-cta .nb-badge');if(sb&&tb)tb.style.backgroundImage=sb.style.backgroundImage}
   else if(!list.length)box.innerHTML=`<div class="afilt-empty">${hfilter} 앨범이 아직 없어요</div>`;
-  list.forEach(a=>{const cat=CAT[a.p]||CAT.기타;
+  list.forEach(a=>{const cat=catOf(a.p);
     const el=document.createElement('button');el.className='alb'+(a.fresh?' new-badge':'');
     el.style.cssText=`--cat:${cat.c};--cat-light:${cat.l};--cat-text:${cat.t};--cat-more:${cat.m}`;
     el.innerHTML=`<div class="photos">${photosHTML(a,!homeAll)}</div><div class="info"><div class="tx"><span class="nm"></span><span class="dt"><span class="lab">${a.p}</span> | ${homeDate(a.d)}</span></div><span class="avs">${faceStack(a.ppl||1,cat.c,cat.b)}</span></div>`;
@@ -4057,7 +4074,7 @@ function openGroup(g){const gi=GROUPS.indexOf(g);
   $('#gp-name').textContent=g.n;$('#gp-avs').innerHTML=faceStack(g.m,'var(--colors-green)','var(--colors-on-surface)');$('#gp-sum').textContent=`${g.m}명 · 앨범 ${g.a}개`;
   $('#gp-mem').setAttribute('aria-label',`함께한 사람 ${g.m}명 보기`);$('#gp-mem').onclick=()=>toast(`함께한 사람 ${g.m}명`);
   curG=g;$('#gp-sortt').textContent=GSORT;const box=$('#gp-list');box.innerHTML='';
-  gSorted(g).forEach(a=>{const el=document.createElement('button');el.className='galb';const cat=CAT[a.p]||CAT.기타;el.style.cssText=`--cat:${cat.c};--cat-light:${cat.l};--cat-text:${cat.t};--cat-more:${cat.m}`;
+  gSorted(g).forEach(a=>{const el=document.createElement('button');el.className='galb';const cat=catOf(a.p);el.style.cssText=`--cat:${cat.c};--cat-light:${cat.l};--cat-text:${cat.t};--cat-more:${cat.m}`;
     el.innerHTML=`<span class="cv" style="background-image:${bg(a.img)}"></span><span class="tx"><span class="t"><b></b>${a.nw?`<span class="nw">새 사진 ${a.nw}</span>`:''}</span><small><span class="lb">${a.p}</span> · 사진 ${a.c}장 · ${a.w}</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>`;
     el.querySelector('b').textContent=a.n;el.querySelector('.cv')&&el.querySelector('.cv').setAttribute('aria-hidden','true');el.insertAdjacentHTML('beforeend',`<span class="__sr">, 사진 ${a.c}장</span>`);
     el.onclick=()=>{a.nw=0;albFrom='grp';openAlbum(a);setTimeout(()=>renderGroupList(g),400)};box.appendChild(el)});
@@ -4634,7 +4651,7 @@ addEventListener('message',e=>{const m=e.data;if(!m)return;
   if(m.type==='simpic-ready'){albReady=true;if(albQ){albFrame.contentWindow.postMessage(albQ,'*');albQ=null}}
   if(m.type==='simpic-back'){go(albFrom);albFrom='home'}});
 function openAlbum(a){const p={개인:'기타'}[a.p]||a.p;
-  const msg={type:'simpic-open',p,name:a.n,date:a.d,n:a.c,cover:IMG[a.img],tabs:a.tabs||null,ppl:a.ppl||null,cats:(()=>{try{return CATS.map(c=>c.n)}catch(e){return null}})()};
+  const msg={type:'simpic-open',p,name:a.n,date:a.d,n:a.c,cover:IMG[a.img],tabs:a.tabs||null,ppl:a.ppl||null,cats:(()=>{try{return CATS.map(c=>c.n)}catch(e){return null}})(),hex:(()=>{try{const C=CATS.find(c=>c.n===p);return C?C.hex:null}catch(e){return null}})()};
   go('album');if(albReady)albFrame.contentWindow.postMessage(msg,'*');else albQ=msg}
 
 /* ---------- 연결: 사진 상세·베스트컷 / 문서 스캔 / 설정 프로토타입 ---------- */
