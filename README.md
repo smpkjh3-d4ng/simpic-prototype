@@ -12,3 +12,5 @@
 - `DESIGN.md` — 색·글자·간격·모서리·그림자 토큰과 컴포넌트·화면 규칙 (9주차, 구글 design.md 형식)
 - `VOICE.md` — 보이스앤톤, 문장 규칙, 용어집, 상황별 톤 (10주차 UX 라이팅)
 - `accessibility-guide.md` — WCAG 2.2 AA 기준과 Simpic 접근성 규칙
+- `component.md` — Figma 컴포넌트 목록·variant·속성과 사용법 (Figma `Components(수정용)` 기준)
+- `contract.md` — 토큰·컴포넌트·동작 계약, 토큰 변경 절차, 확인 방법 (초안)
