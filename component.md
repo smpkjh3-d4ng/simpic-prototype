@@ -92,6 +92,8 @@
 - `Icon/close` · `back` · `more` · `search` · `history` · `download` · `plus` · `sparkle` · `chevron-right` · `arrow-up` · `heart` · `comment` · `share` · `grid` · `filter` · `album` · `friends` (24 기준)
 - **Icon/bestcut** — `Color(V)` Pink | Green | Purple. 베스트컷 심볼(꽃). 꽃잎마다 카테고리 옅은 색 → 기본색 그라데이션, 불투명도 70%. 브랜드 심볼이라 흰색·검정으로 덮어쓰지 않아요.
 - **Icon/like** — `Color(V)` Pink | Green | Purple. 좋아요 3D 유리 8각 배지(꽃 배지). 앨범 카테고리 색에 맞춰 고르고, 흰색·검정으로 덮어쓰지 않아요.
+- **Icon/like-outline** (2026-11-17, Figma 미반영) — 좋아요가 0개일 때 쓰는 물결 8각 테두리. 24 격자, 선 굵기 2, `currentColor`(사진 상세에서는 `dark.white`). 누르면 Icon/like로 바뀌어요.
+- **Icon/wand** (2026-11-17, Figma 미반영) — 보정(마술봉) 아이콘. 막대는 선 굵기 2, 반짝이 3개는 채움, 24 격자. 사진 상세 '베스트컷' CTA 알약에 20 크기·On-surface로 써요.
 - 카테고리와 색: 취미(Figma 값 `덕질`)=Pink, 업무=Green, 친목=Purple. 기타와 사용자가 추가한 카테고리는 Figma variant가 없고, 프로토타입에서 고른 색(기타는 Outline)으로 칠해요.
 
 ### Chip
@@ -105,7 +107,7 @@
 - **속성:** `State(V)` Default | Pressed | Disabled | Loading · `Label(T)` ("새 앨범 만들기") · `Show Icon(B)` (true) · `Icon(Swap)` · `Show Badge(B)` (true)
 - **모양:** 높이 54, 알약(`rounded.sm`), 좌우 16, `body-md` 흰 글자. 왼쪽 글래스 배지 + 글자, 오른쪽 끝 아이콘.
 - **상태:** Pressed=`primary-pressed` · Disabled=`disabled` 바탕 + `neutral` 글자 · Loading=글자·배지·아이콘을 숨기고 점 3개(`neutral`, 간격 `xs`)만 가운데.
-- **규칙:** 한 화면에 Primary 버튼은 하나만 둬요. 위험 동작에는 쓰지 않아요(Danger를 써요).
+- **규칙:** 한 화면에 Primary 버튼은 하나만 둬요. 하단 고정 위험 동작에는 쓰지 않아요(Danger 글자를 써요). 단, 앨범·그룹·친구 확인 창의 실행 버튼은 Primary 검정이에요(DESIGN.md '확인 창').
 
 ### Button / Bottom
 - **속성:** `Type(V)` Primary | Secondary | Icon Only · `State(V)` Default | Pressed | Disabled | Loading · `Label(T)` · `Show Icon(B)` (true) · `Icon(Swap)`
@@ -205,7 +207,7 @@
 - 화면 전체에 까는 흐린 사진(레이어 블러 40). 화면 프레임 맨 뒤에 절대 위치로 둬요. 바탕색은 정하지 않아요.
 
 ### Photo Canvas
-- 베스트컷·사진 상세의 큰 사진 캔버스. `rounded.lg`, 폭 372, 화면에 남는 높이를 채워요.
+- 베스트컷·사진 상세의 큰 사진 캔버스. `rounded.lg`. 원래 자리(폭 372, 화면에 남는 높이)를 최대 크기로 두고, 그 안에 **사진의 원본 비율대로** 맞춰 가운데에 놓아요. 사진을 잘라내지 않아요(2026-11-17, Figma는 아직 남는 높이를 채우는 고정 크기).
 
 ### Prompt Input
 - 베스트컷 입력창. 높이 60 알약, 흰 20% 유리. 안내 글자 `white-alpha-78`(2026-11-16, Figma는 `white-alpha-40`), 입력된 글자는 `dark.white`. 오른쪽 44×44 AI 생성 버튼(Pink → Pink Light 원형 그라데이션).
@@ -251,4 +253,6 @@ Figma 설명이 최종 프로토타입보다 예전 값으로 남아 있는 곳�
 | Avatar Stack `+N` 숫자 | 흰색 | 취미·업무는 검정 (대비) |
 | 위험 색 (`colors/danger`) | #E4444C | #D12F38 |
 | Prompt Input 안내 글자 | `white-alpha-40` | `white-alpha-78` |
+| Photo Canvas | 남는 높이를 채우는 고정 크기 | 원본 비율로 맞춤 (2026-11-17) |
+| 사진 상세 '베스트컷' CTA 아이콘 | 베스트컷 꽃 심볼 | 보정(마술봉) `Icon/wand` (2026-11-17) |
 | Button / Bottom 기본 글자 | '사진 전체 다운로드' | 앨범 하단에 이 버튼을 두지 않음. 전체 저장은 더보기 › '전체 사진 저장하기' |
