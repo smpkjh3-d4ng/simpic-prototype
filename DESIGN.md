@@ -429,12 +429,12 @@ Figma `Components(수정용)` 섹션에 화면별로 정리돼 있습니다(`공
 - **Icon Button:** 원형. 44(기본)·40(필터 줄). 흰 바탕 위 Surface, 사진·그라데이션 위 Surface Translucent, 다크 화면은 유리(Glass) 또는 바탕 없음(Ghost).
 - **Text Button:** 높이 44 알약. 밝은 화면은 Surface Translucent + `body-md`, 다크 화면은 바탕 없이 `label-md` 흰색 40%('저장' 비활성).
 - **Chip:** 높이 40, 좌우 여백 16, 아이콘과 글자 사이 4, 칩 사이 8, `label-md`. 기본은 Surface Translucent, 선택은 Primary + 흰 글자. 맨 앞 '전체' 칩은 바탕 없이 그리드 아이콘 + 글자만(아이콘–글자 8). 칩 그룹 사이 구분선은 Border 1px.
-- **Album Card:** 폭 372, 안쪽 여백 16 사방, 모서리 md, 카테고리 옅은 색 바탕. 위쪽에 기울어진 사진 3장 + More 카드, 아래쪽에 제목(`headline-md`)과 그 아래 한 줄에 카테고리(`label-md`, 카테고리 글자색) + ' | ' + 날짜(`label-md`, Secondary)를(앨범 상단과 같은 구분선 표기) 4 간격으로 쌓고, 오른쪽 아래에 함께한 사람 아바타. 장수는 쓰지 않습니다.
+- **Album Card:** 폭 372, 안쪽 여백 16 사방, 모서리 md, 카테고리 옅은 색 바탕. 위쪽에 기울어진 사진 3장 + More 카드, 아래쪽에 제목(`headline-md`)과 그 아래 한 줄에 카테고리(`label-md`, 카테고리 글자색) + ' | ' + 날짜(`label-md`, Secondary)를(앨범 상단과 같은 구분선 표기) 4 간격으로 쌓고, 오른쪽 아래에 함께한 사람 아바타. 장수는 쓰지 않습니다. 위쪽 사진 3장 + More 카드는 카드 폭(홈 가로 목록 300, 전체 앨범 보기 372)과 상관없이 좌우 여백이 같도록(카드 가장자리에서 약 10) 고르게 벌려 놓습니다.
 - **Avatar Stack:** 30×30 원형 아바타를 −8씩 겹치고 흰 테두리 2px. 마지막은 `+N` 배지(카테고리 기본색 바탕, 숫자 `body-sm`은 흰색·검정 중 대비가 높은 쪽 — 취미·업무 검정, 친목 흰색). 그룹 행 아바타는 32×32, −9 겹침, `surface` 테두리, `+N` 배지는 Green 바탕 + 검정 숫자.
 - **Group Row:** 높이 70, Surface 바탕, 모서리 md, 좌우 여백 16. 그룹 이름(`body-md`)과 메타(`body-sm`, Secondary), 아바타, 오른쪽 화살표.
 - **Album Hero:** 앨범 상세 상단. 카테고리 그라데이션 배경에 팀이 준 꽃 그래픽 에셋 2장(`앨범 그래픽 {그린|보라|핑크}`는 오른쪽 가장자리 위 110×192, `… 2`는 왼쪽 가장자리 80×144, 원본 그대로·다시 그리지 않음, 업무 그린·친목 보라·취미 핑크. 기타는 같은 그래픽을 Outline 회색으로, 사용자가 추가한 카테고리는 기본 그래픽과 같은 공식(흰색 위 고른 색 약 12%)의 연한 파스텔로 칠합니다. 이때도 베스트컷·좋아요 아이콘은 고른 색을 진하게 유지합니다)을 장식으로 깔고, 그 위에 위에서부터 제목(`headline-lg`, 가운데) → 카테고리(`label-md`, 기본색)·날짜(`label-md`, Secondary) → 사진 콜라주 순서로 둡니다(제목이 사진 위).
 - **Stats Card:** Surface Translucent, 모서리 md, `shadow-sm`, 위아래 16. 2칸 + 가운데 Border 구분선. 숫자는 `headline-lg`, 라벨은 `body-sm` Secondary.
-- **Top 3 Stack:** 128×178 카드 3장, 흰 테두리 2.5, 모서리 md, `shadow-sm`, 양옆 ±8°.
+- **Top 3 Stack:** 128×178 카드 3장, 흰 테두리 2.5, 모서리 md, `shadow-sm`, 양옆 ±8°. 카드를 누르면 그 사진의 사진 상세가 열립니다.
 - **Hint Card:** Surface Raised, 모서리 md, 여백 16, `shadow-sm`, 아이콘 24 + 제목(`body-md`) + 설명(`body-sm`, Secondary).
 - **Photo Grid:** 3열, 간격 8, 칸 모서리 md.
 - **Bottom Sheet:** Neutral 바탕, 위쪽 모서리 lg, 좌우 여백 20. 하단 버튼은 Bottom Button 규칙을 따릅니다.

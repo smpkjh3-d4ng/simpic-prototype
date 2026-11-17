@@ -1865,7 +1865,7 @@ function applyPal(){const p=PAL[state.pal],r=document.documentElement.style;r.se
 function renderPanel(){$('#segP').innerHTML=Object.keys(DATA).map(k=>`<button class="${state.p===k?'on':''}" onclick="setP('${k}')">${k}</button>`).join('');}
 function setP(k){$('#ph').classList.remove('datemode');state.p=k;state.pal=DATA[k].pal;state.tab='전체';state.pp=0;state.up=0;state.pl=-1;selMode(false);full(true)}
 function setPal(k){state.pal=k;D().pal=k;applyPal();renderPanel()}
-function full(top){applyPal();renderPanel();PS=photos();renderHero();renderTabs();renderBody();updFoot();if(top)$('#sc').scrollTop=0;onScroll()}
+function full(top){$('#ph').classList.toggle('datemode',state.tab==='날짜');applyPal();renderPanel();PS=photos();renderHero();renderTabs();renderBody();updFoot();if(top)$('#sc').scrollTop=0;onScroll()}
 function dateText(d){return d.e?`${d.s} – ${d.e}`:`${d.s} – 진행 중`}
 function renderHero(){const d=D();$('#ttl').textContent=d.name;
  $('#hero').innerHTML=`${!PS.length||!d.n?`<div class="cluster"><button class="cov empty" aria-label="사진 올리기" onclick="openUpload()"><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 6v12M6 12h12"/></svg></button></div>`:''}${PS.length&&d.n?`<div class="cluster"><div class="mini m1" style="background-image:${img(d.m[0])}"></div><div class="cov" style="background-image:${img(d.cover)}"></div><div class="mini m2" style="background-image:${img(d.m[1])}"></div>
@@ -1888,9 +1888,9 @@ function renderBody(){const d=D(),t=state.tab,ps=PS;let h='';
  if(!ps.length){$('#body').innerHTML='<div class="empty"><b>아직 사진이 없어요</b>오른쪽 아래 +로 첫 사진을 올려서 앨범을 채워 보세요</div>';return}
  if(t==='전체')h=byTime(ps);
  else if(t==='베스트컷'){let s=ps.slice().sort((a,b)=>b.likes-a.likes);const cur=(typeof SEC!=='undefined')&&SEC[D().name];const fv=!cur&&(FAV[D().name]||FAV['@'+D().label]);const md=!cur&&MOOD[D().name];if(fv||md){const pick=k=>ps.find(p=>p.k===k)||{id:state.p+'_'+k,k,likes:5,sec:0,up:0,face:0};const ex=new Set([...(fv||[]),...(md||[])]);const isDoc=k=>/^(doc\d|invoice|services)$/.test(k);const seen=new Set();const uniq=s.filter(p=>!ex.has(p.k)&&!seen.has(p.k)&&seen.add(p.k));const top=(D().label==='업무'?uniq.filter(p=>!isDoc(p.k)):uniq).slice(0,3);const rest=uniq.filter(p=>!top.includes(p));const fvP=fv?fv.map(pick):rest.slice(0,6);const rest2=fv?rest:rest.slice(6);const mdP=md?md.map(pick):rest2.slice(0,9);s=[...top,...fvP,...mdP]}if(cur){const pick=k=>ps.find(p=>p.k===k)||{id:state.p+'_'+k,k,likes:5,sec:0,up:0,face:0};s=[...cur.top,...cur.fav,...cur.mood].map(pick)}BCS=s;h=`<div class="st">${secTitle(0)}<button class="more" onclick="openMore(0)">사진 더보기</button></div><div class="fan">
-  <div class="tile" style="left:10px;top:26px;transform:rotate(-8deg);background-image:${img(s[1].k)}"></div>
-  <div class="tile" style="right:10px;top:26px;transform:rotate(8deg);background-image:${img(s[2].k)}"></div>
-  <div class="tile" style="left:50%;margin-left:-64px;top:6px;z-index:2;background-image:${img(s[0].k)}"></div></div>
+  <div class="tile" role="button" aria-label="반응이 가장 많은 사진 2위" style="left:10px;top:26px;transform:rotate(-8deg);background-image:${img(s[1].k)}" onclick="tap('${s[1].id}',this)"></div>
+  <div class="tile" role="button" aria-label="반응이 가장 많은 사진 3위" style="right:10px;top:26px;transform:rotate(8deg);background-image:${img(s[2].k)}" onclick="tap('${s[2].id}',this)"></div>
+  <div class="tile" role="button" aria-label="반응이 가장 많은 사진 1위" style="left:50%;margin-left:-64px;top:6px;z-index:2;background-image:${img(s[0].k)}" onclick="tap('${s[0].id}',this)"></div></div>
   <div class="st">${secTitle(1)}<button class="more" onclick="openMore(1)">사진 더보기</button></div>${grid(s.slice(3,9))}
   <div class="st">${secTitle(2)}<button class="more" onclick="openMore(2)">사진 더보기</button></div>${grid(s.slice(9,18))}
   <div class="mkbest" role="note"><span class="mi"><svg viewBox="0 0 24 24"><path d="M12 2c.6 4.9 2.6 7.4 8 8.3v1.4c-5.4.9-7.4 3.4-8 8.3h-1.4c-.6-4.9-2.6-7.4-8-8.3v-1.4c5.4-.9 7.4-3.4 8-8.3z" fill="currentColor"/></svg></span><span class="mt"><b>마음에 드는 사진이 없나요?</b><small>사진을 골라 나만의 베스트컷을 만들어 보세요</small></span></div>`}
@@ -4220,7 +4220,7 @@ function homeDate(d){const [st,en]=d.split('–').map(x=>x.trim());if(!en||en===
 function faceStack(n,badgeColor,badgeText='#fff'){const F=['d8','d4','d13'];let h='';for(let i=0;i<Math.min(n,3);i++)h+=`<i style="background-image:${bg(F[i])}"></i>`;if(n>3)h+=`<i style="background:${badgeColor};color:${badgeText}">+${n-3}</i>`;return h}
 function photosHTML(a,tight){if(!a.c)return '<div class="alb-empty">아직 사진이 없어요. 첫 사진을 올려 보세요</div>';
   const ims=(a.ims&&a.ims.length?a.ims:[a.img]).slice();let k=0;while(ims.length<3)ims.push(PICS[(PICS.indexOf(ims[0])+(++k))%PICS.length]);
-  const pos=tight?[[-2,-4,3],[58,3,4],[118,-2,4],[178,4,3]]:[[-2,-4,3],[73,3,4],[148,-2,4],[228,4,3]],n=Math.min(a.c,3);let h='';
+  const pos=tight?[[-2,-4,3],[58,3,4],[118,-2,4],[178,4,3]]:[[-2,-4,3],[80,3,4],[163,-2,4],[250,4,3]],n=Math.min(a.c,3);let h='';
   if(a.c>3){const [x,r,y]=pos[3];h+=`<span class="ph3 more" style="left:${x}px;top:${y}px;transform:rotate(${r}deg)">+${a.c-3}</span>`}
   for(let i=n-1;i>=0;i--){const [x,r,y]=pos[i];h+=`<span class="ph3" style="left:${x}px;top:${y}px;transform:rotate(${r}deg);background-image:${bg(ims[i])}"></span>`}
   return h}
