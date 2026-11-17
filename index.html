@@ -4200,7 +4200,8 @@ const S={name:'',purpose:'친목',purposeAuto:null,manual:false,
   active:[],extra:[],pick:'ai',sel:new Set()};
 
 /* ---------- navigation ---------- */
-function go(id){const _t=$('#toast');if(_t)_t.classList.remove('show');$$('.screen').forEach(s=>s.hidden=true);const s=$('#s-'+id);s.hidden=false;
+let catFrom=null;
+function go(id){if(id==='cat'){const c0=$$('.screen').find(x=>!x.hidden);const c=c0&&c0.id.slice(2);if(c==='1'||c==='home'||c==='ftab')catFrom=c}const _t=$('#toast');if(_t)_t.classList.remove('show');$$('.screen').forEach(s=>s.hidden=true);const s=$('#s-'+id);s.hidden=false;
   const sc=s.querySelector('.scroll');if(sc&&id!=='1')sc.scrollTop=0;
   closeOverlay();
   if(id==='2')renderFilters(false);if(id==='3')renderStep3();if(id==='4')renderPhotos();if(id==='5')renderQR();if(id==='home')renderHome();
@@ -4287,10 +4288,13 @@ $('#name').addEventListener('input',e=>{S.name=e.target.value;$('#name-c').textC
 function renderPurpose(){const box=$('#pchips');box.innerHTML='';
   const cap=$('#pcap');cap.textContent=S.thinking?'AI가 이름을 읽고 고르는 중…':S.manual?'직접 골랐어요':S.purpose?'AI가 골랐어요':'';
   cap.style.color=S.thinking||(!S.manual&&S.purpose)?'var(--lav)':'';
-  ['친목','업무','취미','기타'].forEach(p=>{const b=document.createElement('button');b.className='pchip'+(S.purpose===p?' on':'');b.textContent=p;
+  const PL=(()=>{const B=['친목','업무','취미','기타'];let n;try{n=CATS.map(c=>c.n)}catch(e){n=B}return [...B.filter(x=>n.includes(x)),...n.filter(x=>!B.includes(x))]})();box.classList.toggle('many',PL.length>4);
+  PL.forEach(p=>{const b=document.createElement('button');b.className='pchip'+(S.purpose===p?' on':'');b.textContent=p;
     if(S.purposeAuto===p){const t=document.createElement('span');t.className='ai';t.textContent='AI 추천';b.appendChild(t)}
     b.onclick=()=>{S.purpose=p;S.manual=true;renderPurpose()};box.appendChild(b)});
-  const ad=document.createElement('button');ad.className='pchip add';ad.textContent='+ 추가';ad.onclick=()=>go('cat');box.appendChild(ad)}
+  const ad=document.createElement('button');ad.className='pchip add';ad.textContent='+ 추가';ad.onclick=()=>go('cat');box.appendChild(ad);
+  if(box.classList.contains('many')){const on=box.querySelector('.pchip.on');if(on)requestAnimationFrame(()=>{box.scrollLeft=Math.max(0,on.offsetLeft-box.offsetLeft-20)})}}
+(function(){const st=document.createElement('style');st.textContent='.pchips.many{overflow-x:auto!important;overflow-y:hidden;scrollbar-width:none;padding-top:10px;margin-top:14px!important;margin-left:calc(-1 * var(--spacing-page-margin));margin-right:calc(-1 * var(--spacing-page-margin));padding-left:var(--spacing-page-margin);padding-right:var(--spacing-page-margin);width:auto!important}.pchips.many::-webkit-scrollbar{display:none}#s-1 .pchips.many .pchip,#s-1 .pchips.many .pchip.add{flex:0 0 auto!important;padding:0 var(--spacing-lg)!important}';document.head.appendChild(st)})();
 
 const DAYS=['일','월','화','수','목','금','토'];
 function sameDay(a,b){return a.toDateString()===b.toDateString()}
@@ -4912,9 +4916,9 @@ function chipDrag(box,sel,arr,done){if(!box)return;const items=()=>[...box.query
 $('#ce-n').oninput=()=>{const v=$('#ce-n').value.trim();if(v){ceCat().n=v;$('#ce-title').textContent=v}};
 $('#ce-done').onclick=()=>{ceEdit=!ceEdit;renderCatEdit();if(!ceEdit)toast('필터를 저장했어요')};
 $('#ce-del').onclick=()=>{const n=CATS[catCur].n;CATS.splice(catCur,1);go('cat');toast(`'${n}' 카테고리를 지웠어요. 앨범은 '기타'로 옮겼어요`)};
-$('#ce-create').onclick=()=>{const d=catDraft;if(!d.n.trim()||d.n==='새 카테고리'){$('#ce-n').focus();toast('카테고리 이름을 입력해 주세요');return}CATS.push(d);catDraft=null;catCur=0;go('cat');toast(`'${d.n}' 카테고리를 만들었어요`)};
+$('#ce-create').onclick=()=>{const d=catDraft;if(!d.n.trim()||d.n==='새 카테고리'){$('#ce-n').focus();toast('카테고리 이름을 입력해 주세요');return}CATS.push(d);catDraft=null;catCur=0;if(catFrom==='1'){S.purpose=d.n;S.manual=true;go('1');renderPurpose();try{validate()}catch(e){}}else go('cat');toast(`'${d.n}' 카테고리를 만들었어요`)};
 $('#cat-add').onclick=()=>{const used=CATS.map(x=>x.hex);const h=CPAL.find(x=>!used.includes(x))||CPAL[3];catDraft={n:'새 카테고리',hex:h,c:h,on:['좋아요한 사진','날짜'],off:['베스트컷','인물별','장소','올린 사람'],custom:true};catCur=-1;ceEdit=false;go('catedit');setTimeout(()=>{$('#ce-n').select()},50)};
-$$('.cat-back').forEach(b=>b.onclick=()=>go(b.dataset.go));
+$$('.cat-back').forEach(b=>b.onclick=e=>{e.stopPropagation();const t=b.dataset.go==='home'&&catFrom?catFrom:b.dataset.go;go(t);if(t==='1')renderPurpose()});
 
 /* ---------- 친구 프로필 ---------- */
 let fpFrom='ftab';
