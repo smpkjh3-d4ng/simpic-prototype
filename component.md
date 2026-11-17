@@ -91,7 +91,7 @@
 ### Icons
 - `Icon/close` · `back` · `more` · `search` · `history` · `download` · `plus` · `sparkle` · `chevron-right` · `arrow-up` · `heart` · `comment` · `share` · `grid` · `filter` · `album` · `friends` (24 기준)
 - **Icon/bestcut** — `Color(V)` Pink | Green | Purple. 베스트컷 심볼(꽃). 꽃잎마다 카테고리 옅은 색 → 기본색 그라데이션, 불투명도 70%. 브랜드 심볼이라 흰색·검정으로 덮어쓰지 않아요.
-- **Icon/like** — `Color(V)` Pink | Green | Purple. 좋아요 3D 유리 8각 배지(꽃 배지). 앨범 카테고리 색에 맞춰 고르고, 흰색·검정으로 덮어쓰지 않아요.
+- **Icon/like** — `Color(V)` Pink | Green | Purple. 좋아요 3D 유리 8각 배지(꽃 배지). 앨범 카테고리 색에 맞춰 고르고, 흰색·검정으로 덮어쓰지 않아요. 프로토타입은 팀이 준 PNG 이미지(160×160, 투명 배경)를 써요(2026-11-17 교체: 취미 핑크, 업무 초록, 친목 파랑. 문서 사진 상세는 업무 초록).
 - **Icon/like-outline** (2026-11-17, Figma 미반영) — 좋아요가 0개일 때 쓰는 물결 8각 테두리. 24 격자, 선 굵기 2, `currentColor`(사진 상세에서는 `dark.white`). 누르면 Icon/like로 바뀌어요.
 - **Icon/wand** (2026-11-17, Figma 미반영) — 보정(마술봉) 아이콘. 막대는 선 굵기 2, 반짝이 3개는 채움, 24 격자. 사진 상세 '베스트컷' CTA 알약에 20 크기·On-surface로 써요.
 - 카테고리와 색: 취미(Figma 값 `덕질`)=Pink, 업무=Green, 친목=Purple. 기타와 사용자가 추가한 카테고리는 Figma variant가 없고, 프로토타입에서 고른 색(기타는 Outline)으로 칠해요.
