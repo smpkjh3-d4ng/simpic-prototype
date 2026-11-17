@@ -1681,6 +1681,8 @@ html,body{height:100%;overflow:hidden;background:var(--bg)}
 .upg .ck{display:block}
 .upnote{padding:4px 22px 12px;font-size:14px;line-height:20px;font-weight:700;color:var(--colors-secondary,#6B6B76)}
 .ppl button.on b{margin-top:6px}
+/* 마이크로 인터랙션 */
+@media (prefers-reduced-motion: no-preference){.rnd,.ib,.pillbtn,.st .more,.fa,.pseg button,.cta,.tadd,.upb,.pin,.ppl button,.plrow .chip,.sdel,.dpill{transition:scale .14s cubic-bezier(.2,.8,.2,1),background-color .2s,color .2s}.rnd:active,.ib:active,.pillbtn:active,.st .more:active,.fa:active,.pseg button:active,.cta:active:not(:disabled),.tadd:active,.upb:active,.pin:active,.ppl button:active,.plrow .chip:active,.sdel:active,.dpill:active{scale:.94}.fan .tile:active{scale:.97}.tile.sel .ck{animation:mi-pop .28s cubic-bezier(.3,1.6,.5,1)}.ppl button.on .pc{animation:mi-ring .32s cubic-bezier(.3,1.6,.5,1)}#body.mi-in{animation:mi-in .24s ease-out}@keyframes mi-pop{0%{scale:.4}60%{scale:1.15}100%{scale:1}}@keyframes mi-ring{0%{scale:.92}100%{scale:1}}@keyframes mi-in{from{opacity:0;translate:0 8px}to{opacity:1;translate:0 0}}}
 .fc.ed.dragging,#ce-on button.dragging{opacity:.55;transform:scale(1.04)}
 .tchips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 .tchip{height:40px;border-radius:999px;background:var(--colors-neutral,#FFFFFF);box-shadow:inset 0 0 0 1px var(--colors-border,#E6E6EB);display:inline-flex;align-items:center;gap:4px;padding:0 16px;cursor:text}
@@ -1878,7 +1880,7 @@ function renderTabs(){const d=D();
  bindLongPress()}
 function bindLongPress(){document.querySelectorAll('#tabs .chip[data-t]').forEach(c=>{let t,moved;c.onpointerdown=e=>{moved=false;c.classList.add('press');t=setTimeout(()=>{c.classList.remove('press');c._lp=true;openFilterSheet();toast('끌어서 필터 순서를 바꿔요')},480)};
  const end=()=>{clearTimeout(t);c.classList.remove('press')};c.onpointerup=end;c.onpointerleave=end;c.onpointercancel=end;c.addEventListener('click',e=>{if(c._lp){e.stopImmediatePropagation();c._lp=false}},true)})}
-function setTab(t){state.tab=t;$('#ph').classList.toggle('datemode',t==='날짜');renderTabs();renderBody();const tb=$('#tabs');const y=$('#tabAnchor').offsetTop-98;if($('#sc').scrollTop>y)$('#sc').scrollTop=y;const on=tb.querySelector('.chip.on');if(on)tb.scrollTo({left:on.offsetLeft-90,behavior:'smooth'})}
+function setTab(t){state.tab=t;$('#ph').classList.toggle('datemode',t==='날짜');renderTabs();renderBody();{const bd=$('#body');bd.classList.remove('mi-in');void bd.offsetWidth;bd.classList.add('mi-in')}const tb=$('#tabs');const y=$('#tabAnchor').offsetTop-98;if($('#sc').scrollTop>y)$('#sc').scrollTop=y;const on=tb.querySelector('.chip.on');if(on)tb.scrollTo({left:on.offsetLeft-90,behavior:'smooth'})}
 function tile(p){return `<div class="tile ${state.sel.has(p.id)?'sel':''}" data-id="${p.id}" style="background-image:${img(p.k)}" onclick="tap('${p.id}',this)"><div class="ck"></div></div>`}
 function grid(a){return `<div class="grid">${a.map(tile).join('')}</div>`}
 /* photos grouped by time — used by 전체, 인물별, 올린 사람, 날짜 */
@@ -2379,6 +2381,8 @@ function replace(name,d='fade'){ stack[stack.length-1]=name; dir=d; render(); }
 function sheet(name){ S.sheet=name; render(true); }
 function toast(m){ $phone.querySelectorAll('.toast').forEach(x=>x.remove()); const d=document.createElement('div'); d.className='toast'; d.textContent=m; $phone.appendChild(d); setTimeout(()=>d.remove(),2300); }
 /* 사진 틀을 사진의 원본 비율에 맞춰요: 원래 자리(최대 크기) 안에서 가운데 정렬, 잘라내지 않음 */
+/* 마이크로 인터랙션: 유리 버튼 눌림, 좋아요 아이콘 팝·숫자 올라오기 ('동작 줄이기'면 끔) */
+(function(){var st=document.createElement('style');st.textContent='@media (prefers-reduced-motion: no-preference){.glassd,[data-act="startBC"],[data-act="startScan"]{transition:scale .14s cubic-bezier(.2,.8,.2,1),background-color .2s}.glassd:active,[data-act="startBC"]:active,[data-act="startScan"]:active{scale:.94}.mi-liked>img,.mi-liked>svg{animation:mi-like .45s cubic-bezier(.3,1.6,.5,1)}.mi-liked>span:first-of-type{display:inline-block;animation:mi-num .3s cubic-bezier(.2,.8,.2,1)}@keyframes mi-like{0%{scale:.6}55%{scale:1.3}100%{scale:1}}@keyframes mi-num{from{opacity:0;translate:0 8px}to{opacity:1;translate:0 0}}}';document.head.appendChild(st);document.addEventListener('click',function(e){if(!e.target.closest('[data-act="like"]'))return;setTimeout(function(){var b=document.querySelector('[data-act="like"]');if(b)b.classList.add('mi-liked')},0)},true)})();
 window.addEventListener('resize',function(){setTimeout(fitCanvas,60)});
 function fitCanvas(){
   document.querySelectorAll('.screen div[style*="border-radius: 28px; overflow: hidden"]').forEach(function(d){
@@ -3163,6 +3167,8 @@ function replace(name,d='fade'){ stack[stack.length-1]=name; dir=d; render(); }
 function sheet(name){ S.sheet=name; render(true); }
 function toast(m){ $phone.querySelectorAll('.toast').forEach(x=>x.remove()); const d=document.createElement('div'); d.className='toast'; d.textContent=m; $phone.appendChild(d); setTimeout(()=>d.remove(),2300); }
 /* 사진 틀을 사진의 원본 비율에 맞춰요: 원래 자리(최대 크기) 안에서 가운데 정렬, 잘라내지 않음 */
+/* 마이크로 인터랙션: 유리 버튼 눌림, 좋아요 아이콘 팝·숫자 올라오기 ('동작 줄이기'면 끔) */
+(function(){var st=document.createElement('style');st.textContent='@media (prefers-reduced-motion: no-preference){.glassd,[data-act="startBC"],[data-act="startScan"]{transition:scale .14s cubic-bezier(.2,.8,.2,1),background-color .2s}.glassd:active,[data-act="startBC"]:active,[data-act="startScan"]:active{scale:.94}.mi-liked>img,.mi-liked>svg{animation:mi-like .45s cubic-bezier(.3,1.6,.5,1)}.mi-liked>span:first-of-type{display:inline-block;animation:mi-num .3s cubic-bezier(.2,.8,.2,1)}@keyframes mi-like{0%{scale:.6}55%{scale:1.3}100%{scale:1}}@keyframes mi-num{from{opacity:0;translate:0 8px}to{opacity:1;translate:0 0}}}';document.head.appendChild(st);document.addEventListener('click',function(e){if(!e.target.closest('[data-act="like"]'))return;setTimeout(function(){var b=document.querySelector('[data-act="like"]');if(b)b.classList.add('mi-liked')},0)},true)})();
 window.addEventListener('resize',function(){setTimeout(fitCanvas,60)});
 function fitCanvas(){
   document.querySelectorAll('.screen div[style*="border-radius: 28px; overflow: hidden"]').forEach(function(d){
@@ -5005,6 +5011,8 @@ $('#gp-back').onclick=()=>go(gpFrom&&gpFrom!=='grp'?gpFrom:'home');
 DI.alb='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/></svg>';
 (function(){const st=document.createElement('style');st.textContent='#ftab-list .more{border:0;background:transparent;padding:0;display:flex;align-items:center;justify-content:center;cursor:pointer}';document.head.appendChild(st)})();
 function friendMenu(btn,f){dropMenu(btn,[['out','친구 끊기',1,()=>askModal(`${f[0]}님과 친구를 끊을까요?`,'함께 만든 앨범과 사진은 그대로 남아요','친구 끊기',()=>{const i=FRIENDS2.indexOf(f);if(i>=0)FRIENDS2.splice(i,1);renderFtab();toast(`${f[0]}님과 친구를 끊었어요`)})]])}
+/* ---------- 마이크로 인터랙션: 누를 때 살짝 작아졌다 돌아오기 ('동작 줄이기'면 끔) ---------- */
+(function(){const st=document.createElement('style');st.textContent='@media (prefers-reduced-motion: no-preference){.alb,.grow,.galb,.fp-alb,#ftab-list .fr,.cta,.pchip,.hchip,.fchip,.round,.nu-new,.ij-paste,.preset,.mchip,.hc-filter,#ftab-list .more,.ij-x{transition:scale .14s cubic-bezier(.2,.8,.2,1),background-color .2s,color .2s,box-shadow .2s}.alb:active,.grow:active,.galb:active,.fp-alb:active,#ftab-list .fr:active{scale:.98}.cta:active:not(:disabled),.pchip:active,.hchip:active,.fchip:active,.round:active,.nu-new:active,.ij-paste:active,.preset:active,.mchip:active,.hc-filter:active,#ftab-list .more:active,.ij-x:active{scale:.94}}';document.head.appendChild(st)})();
 /* ---------- 앨범·설정 화면에서 오는 요청 ---------- */
 function dropAlbum(name){const i=albums.findIndex(a=>a.n===name);if(i>=0)albums.splice(i,1);GROUPS.forEach(g=>{if(g.albs){const j=g.albs.findIndex(a=>a.n===name);if(j>=0){g.albs.splice(j,1);g.a=Math.max(0,g.a-1)}}})}
 addEventListener('message',e=>{const m=e.data;if(!m||!m.type)return;
