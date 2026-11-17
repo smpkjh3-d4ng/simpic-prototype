@@ -1681,6 +1681,14 @@ html,body{height:100%;overflow:hidden;background:var(--bg)}
 .upg .ck{display:block}
 .upnote{padding:4px 22px 12px;font-size:14px;line-height:20px;font-weight:700;color:var(--colors-secondary,#6B6B76)}
 .ppl button{gap:16px}
+.fc.ed.dragging,#ce-on button.dragging{opacity:.55;transform:scale(1.04)}
+.tchips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.tchip{height:40px;border-radius:999px;background:var(--colors-neutral,#FFFFFF);box-shadow:inset 0 0 0 1px var(--colors-border,#E6E6EB);display:inline-flex;align-items:center;gap:4px;padding:0 16px;cursor:text}
+.tchip:focus-within{box-shadow:inset 0 0 0 1.5px var(--colors-primary,#111114)}
+.tchip input{border:0;outline:0;background:none;padding:0;font-family:inherit;font-size:14px;line-height:20px;font-weight:700;color:var(--colors-on-surface,#111114)}
+.tchip input::placeholder{color:var(--colors-secondary,#6B6B76)}
+.tchip .tx{width:24px;height:24px;margin-right:-8px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--colors-secondary,#6B6B76)}
+.tadd{height:40px;border-radius:999px;padding:0 16px;border:1px dashed var(--colors-disabled,#C8C8CE)!important;font-size:14px;line-height:20px;font-weight:700;color:var(--colors-secondary,#6B6B76)}
 .plrow{display:flex;gap:8px;overflow-x:auto;padding:12px 20px 4px;scrollbar-width:none}
 .plrow::-webkit-scrollbar{display:none}
 .plrow .chip small{font-size:12px;line-height:16px;font-weight:400;opacity:.75;margin-left:2px}
@@ -1893,6 +1901,7 @@ function renderBody(){const d=D(),t=state.tab,ps=PS;let h='';
  else if(t==='날짜'){h=`<button class="dpill" id="dpill" onclick="openDatePicker()"><i></i><span class="roll" id="roll"></span><span class="chg">바꾸기<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 10l4-4 4 4M8 14l4 4 4-4"/></svg></span></button>`+byTime(ps)+'<div style="height:420px"></div>';state.di=-1}
  else if(t==='장소'){const pl=state.pl,cn=d.secs.map((_,i)=>ps.filter(p=>p.sec===i).length);h=mapHTML()+`<div class="plrow" role="group" aria-label="장소">${[['전체',-1,ps.length],...d.secs.map((x,i)=>[x[3],i,cn[i]])].filter(x=>x[2]>0).map(([n,i,c])=>`<button class="chip ${pl===i?'on':''}" aria-pressed="${pl===i}" onclick="setPl(${i})">${n}<small>${c}장</small></button>`).join('')}</div>`+byTime(pl<0?ps:ps.filter(p=>p.sec===pl),1)}
  else if(t==='음식·풍경'){const FOODK=new Set(['sk01','sk02','sk05','sk11','sk22','sk28','sk30','sk31','sk40','cf07','cf11','cf24','cf33','cf34','cf36','d4','d8','d13','tira','donut','chicken','churros','apple1','apple2','apple3','fruit']),SCENEK=new Set(['sk03','sk07','sk09','sk13','sk15','sk16','sk17','sk21','sk23','sk24','sk25','sk26','sk35','sk38','d9','d12','d1','bridge1','bridge2','bridge3','road']);const uq=f=>{const seen=new Set();return ps.filter(p=>f(p.k)&&!seen.has(p.k)&&seen.add(p.k))};const fo=uq(k=>FOODK.has(k)||(!/^sk/.test(k)&&(PH[k]||[]).some(t=>['음식','디저트','간식','라멘','햄버거','붕어빵','와플'].includes(t)))),sc=uq(k=>SCENEK.has(k)||(!/^sk/.test(k)&&(PH[k]||[]).some(t=>['풍경','바다','노을','벚꽃','다리','강','해변'].includes(t))));h=(fo.length?`<div class="st">음식<small>${fo.length}장</small></div>${grid(fo)}`:'')+(sc.length?`<div class="st">풍경<small>${sc.length}장</small></div>${grid(sc)}`:'')+(!fo.length&&!sc.length?`<div class="st" style="color:var(--colors-secondary)">아직 음식이나 풍경 사진이 없어요</div>`:'')}
+ else if(t==='소속별'){const T=(d.teams&&d.teams.length>1)?d.teams:['청팀','홍팀'];let tm=state.tm||0;if(tm>=T.length)tm=state.tm=0;const of=p=>p.up%T.length;const cn=T.map((_,i)=>ps.filter(p=>of(p)===i).length);h=`<div class="plrow" role="group" aria-label="소속">${T.map((n,i)=>`<button class="chip ${tm===i?'on':''}" aria-pressed="${tm===i}" onclick="state.tm=${i};renderBody()">${esc2(n)}<small>${cn[i]}장</small></button>`).join('')}</div>`+byTime(ps.filter(p=>of(p)===tm))}
  else if(t==='올린 사람'){const L=NAMES.slice(0,d.ppl).map((n,i)=>[n,AV[i],ps.filter(p=>p.up===i).length]);h=peopleRow(L,state.up,'state.up')+`<div class="st">${state.up===0?'내가 올린 사진':NAMES[state.up]+'님이 올린 사진'}<small>${L[state.up][2]}장</small></div>`+byTime(ps.filter(p=>p.up===state.up),'time').replace(/class="dsec"/g,'class="dsec" style="padding-top:8px"')}
  else if(t==='문서'){const docs=ps.filter(p=>/(invoice|services|present|doc\d)/.test(p.k));h=`<div class="scanban"><b>문서로 보이는 사진이 ${docs.length}장 있어요</b><p>스캔하면 반듯하고 또렷해져요. 원본은 그대로 남아요</p><div class="bt"><button onclick="toast('문서 탭에서 언제든 다시 할 수 있어요')">나중에 하기</button><button class="y" onclick="parent.postMessage({type:'simpic-scan'},'*')">스캔하기</button></div></div>`+byTime(docs)}
  if(!h)h=byTime(ps);
@@ -1996,9 +2005,9 @@ function openInvite(){const d=D(),o=$('#invite');o.innerHTML=`<div class="ohead"
 function closeOv(id){if(id==='srch')kbShow(false);setTimeout(()=>$('#'+id).classList.remove('on'),id==='srch'?170:0)}
 /* settings */
 let ED=null;
-function openSettings(focus){const d=D();ED={name:d.name,s:d.s,e:d.e,label:d.label,pal:d.pal,cover:d.cover,m:d.m.slice(),tabs:d.tabs.slice(),group:!!d.group,pw:!!d.pw,pwv:d.pwv||'',fedit:false};const o=$('#settings');o.scrollTop=0;renderSettings();o.classList.add('on');
+function openSettings(focus){const d=D();ED={name:d.name,s:d.s,e:d.e,label:d.label,pal:d.pal,cover:d.cover,m:d.m.slice(),tabs:d.tabs.slice(),group:!!d.group,teams:(d.teams||['청팀','홍팀']).slice(),pw:!!d.pw,pwv:d.pwv||'',fedit:false};const o=$('#settings');o.scrollTop=0;renderSettings();o.classList.add('on');
  requestAnimationFrame(()=>{const t=focus?document.getElementById('set-'+focus):null;o.scrollTop=t?t.offsetTop-100:0})}
-function renderSettings(){const o=$('#settings');const st=o.scrollTop;const fe=!!ED.fedit;const avail=ALLF.filter(f=>!ED.tabs.includes(f));
+function renderSettings(){const o=$('#settings');const st=o.scrollTop;const fe=!!ED.fedit;const avail=[...ALLF,...(ED.group?['소속별']:[])].filter(f=>!ED.tabs.includes(f));
  const TG=(on,js)=>`<div class="tg ${on?'on':''}" role="switch" aria-checked="${on}" onclick="this.classList.toggle('on');this.setAttribute('aria-checked',this.classList.contains('on'));${js||''}"></div>`;
  const R=(t,sub,on,js)=>`<div class="srow"><span><b>${t}</b>${sub?`<small>${sub}</small>`:''}</span>${TG(on,js)}</div>`;
  o.innerHTML=`<div class="ohead"><button class="ib glass" onclick="closeOv('settings')">${SVG.back}</button><h3>앨범 설정</h3><span style="width:44px"></span></div>
@@ -2010,13 +2019,13 @@ function renderSettings(){const o=$('#settings');const st=o.scrollTop;const fe=!
  <div class="sec"><h4>장소</h4><div class="h">선택</div><input class="fld" id="fPlace" placeholder="장소 추가" value="${D().map.area}"></div>
  <div class="sec"><h4>카테고리</h4><div class="h">카테고리를 바꾸면 추천 필터와 앨범 색이 함께 바뀌어요</div><div class="pseg">${Object.keys(PDEF).map(k=>`<button class="${ED.label===k?'on':''}" onclick="ED.label='${k}';ED.pal=PDEF['${k}'];renderSettings()">${k}</button>`).join('')}</div></div>
  <div class="sec" id="set-filters"><div class="fhead"><h4>필터 수정</h4><button class="${fe?'done':''}" onclick="ED.fedit=${!fe};renderSettings()">${fe?'완료':'편집'}</button></div>
-  <div class="fchips"><span class="fc">전체</span>${ED.tabs.map((t,i)=>fe?`<span class="fc ed"><i class="grip">⠿</i>${t}<button class="fx" aria-label="${t} 빼기" onclick="ED.tabs.splice(${i},1);renderSettings()">✕</button></span>`:`<span class="fc">${t}</span>`).join('')}</div>
+  <div class="fchips"><span class="fc">전체</span>${ED.tabs.map((t,i)=>fe?`<span class="fc ed" data-t="${t}"><i class="grip">⠿</i>${t}<button class="fx" aria-label="${t} 빼기" onclick="ED.tabs.splice(${i},1);renderSettings()">✕</button></span>`:`<span class="fc">${t}</span>`).join('')}</div>
   ${fe&&avail.length?`<div class="fdiv"></div><div class="h" style="margin:0 0 10px">더 넣을 수 있는 필터</div><div class="fchips">${avail.map(f=>`<button class="fa" onclick="ED.tabs.push('${f}');renderSettings()"><i>+</i>${f}</button>`).join('')}</div>`:''}</div>
  <div class="sec"><h4 style="margin-bottom:12px">사진 모으기</h4>${R('호스트만 사진 올리기','',true)}</div>
  <div class="sec">${R('입장 비밀번호','비밀번호 4자리를 정해 주세요',!!ED.pw,'ED.pw=!ED.pw;renderSettings();if(ED.pw)setTimeout(()=>{const x=document.getElementById(`spw`);x&&x.focus()},60)')}${ED.pw?`<div class="spin"><div class="pwbox" onclick="this.querySelector('input').focus()">${[0,1,2,3].map(k=>`<i class="${(ED.pwv||'').length===k?'cur':''}">${(ED.pwv||'')[k]||''}</i>`).join('')}<input id="spw" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" aria-label="비밀번호 4자리" value="${ED.pwv||''}" oninput="pinIn(this)"></div></div>`:''}<div style="height:12px"></div>${R('3일 뒤 링크 닫기','',true)}</div>
- <div class="sec" id="set-group">${R('함께한 사람 팀 나누기','QR로 들어온 사람이 처음 한 번 소속(청팀·홍팀, 부서 등)을 골라요. 그룹별로 사진을 모아볼 수 있어요',ED.group,'ED.group=!ED.group')}</div>
+ <div class="sec" id="set-group">${R('함께한 사람 팀 나누기','QR로 들어온 사람이 처음 한 번 소속(청팀·홍팀, 부서 등)을 골라요. 그룹별로 사진을 모아볼 수 있어요',ED.group,'ED.group=!ED.group;renderSettings()')}${ED.group?teamEd():''}</div>
  <button class="sdel" onclick="askDelAlbum()">앨범 지우기</button>
- <div class="ofoot"><button class="cta" onclick="saveSettings()">저장</button></div>`;o.scrollTop=st}
+ <div class="ofoot"><button class="cta" onclick="saveSettings()">저장</button></div>`;o.scrollTop=st;if(fe)chipDrag(document.querySelector('#set-filters .fchips'),'.fc.ed',ED.tabs,renderSettings)}
 function pickPhoto(slot){const d=D();sheet(`<b style="font-size:18px;font-weight:900;display:block;margin-bottom:12px">앨범 사진에서 고르기</b><div class="pick">${d.pool.map(k=>`<button style="background-image:${img(k)}" onclick="setSlot('${slot}','${k}')"></button>`).join('')}</div>`)}
 function setSlot(slot,k){if(slot==='cover')ED.cover=k;else ED.m[+slot[1]]=k;closeDim();renderSettings()}
 function bindDrag(){const L=$('#flist');if(!L)return;L.querySelectorAll('.fr[data-i]').forEach(row=>{let t,drag=false,sy=0,from=0;
@@ -2026,14 +2035,28 @@ function bindDrag(){const L=$('#flist');if(!L)return;L.querySelectorAll('.fr[dat
  const end=()=>{clearTimeout(t);if(!drag)return;drag=false;const to=row._to??from;const [x]=ED.tabs.splice(from,1);ED.tabs.splice(to,0,x);renderSettings()};
  row.addEventListener('pointerup',end);row.addEventListener('pointercancel',end)})}
 
+/* 필터 칩 순서 바꾸기: 왼쪽 ⠿ 손잡이를 끌거나, 손잡이에서 ←/→ 키 */
+function chipDrag(box,sel,arr,done){if(!box)return;const items=()=>[...box.querySelectorAll(sel)];
+ if(!box._dg){box._dg=1;box.addEventListener('click',e=>{if(box._dragged){e.stopImmediatePropagation();e.preventDefault();box._dragged=false}},true)}
+ items().forEach(chip=>{const g=chip.querySelector('.grip');if(!g)return;g.setAttribute('role','button');g.setAttribute('tabindex','0');g.setAttribute('aria-label',chip.dataset.t+' 순서 바꾸기');g.style.touchAction='none';g.style.cursor='grab';
+  g.addEventListener('keydown',e=>{if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight')return;e.preventDefault();const i=arr.indexOf(chip.dataset.t),j=i+(e.key==='ArrowLeft'?-1:1);if(i<0||j<0||j>=arr.length)return;arr.splice(j,0,arr.splice(i,1)[0]);done();const ng=[...box.parentNode?document.querySelectorAll(sel):[]].find(c=>c.dataset.t===chip.dataset.t);if(ng&&ng.querySelector('.grip'))ng.querySelector('.grip').focus()});
+  g.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();let moved=false;chip.classList.add('dragging');const D0=document;
+   const mv=ev=>{const el=document.elementFromPoint(ev.clientX,ev.clientY);const over=el&&el.closest(sel);if(!over||over===chip||!box.contains(over))return;const r=over.getBoundingClientRect();const after=(ev.clientY>r.bottom)||(ev.clientY>=r.top&&ev.clientX>r.left+r.width/2);box.insertBefore(chip,after?over.nextSibling:over);moved=true};
+   const up=()=>{D0.removeEventListener('pointermove',mv);D0.removeEventListener('pointerup',up);D0.removeEventListener('pointercancel',up);chip.classList.remove('dragging');box._dragged=true;setTimeout(()=>{box._dragged=false},0);
+    if(moved){const order=items().map(c=>c.dataset.t);arr.splice(0,arr.length,...order);done()}};
+   D0.addEventListener('pointermove',mv);D0.addEventListener('pointerup',up);D0.addEventListener('pointercancel',up)})})}
+/* 함께한 사람 팀 나누기: 앨범 만들기처럼 팀 이름 칩을 고치고 더해요 */
+function tw(v){return Math.max(28,String(v).length*14+2)}
+function esc2(v){return String(v).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
+function teamEd(){const n=ED.teams.length;return `<div class="tchips" role="group" aria-label="팀 이름">${ED.teams.map((t,i)=>`<label class="tchip"><input maxlength="12" value="${esc2(t)}" placeholder="소속 ${i+1}" aria-label="팀 ${i+1} 이름" style="width:${tw(t||'소속 '+(i+1))}px" oninput="ED.teams[${i}]=this.value;this.style.width=tw(this.value||this.placeholder)+'px'">${n>2?`<button class="tx" aria-label="${esc2(t||'팀 '+(i+1))} 빼기" onclick="event.preventDefault();ED.teams.splice(${i},1);renderSettings()">✕</button>`:''}</label>`).join('')}${n<6?`<button class="tadd" onclick="ED.teams.push('');renderSettings();setTimeout(()=>{const a=document.querySelectorAll('.tchip input');if(a.length)a[a.length-1].focus()},40)">+ 그룹 추가</button>`:''}</div>`}
 let FS=null;
 function openFilterSheet(){const d=D();FS={tabs:d.tabs.slice(),edit:true};renderFilterSheet()}
-function renderFilterSheet(){const avail=ALLF.filter(f=>!FS.tabs.includes(f));
+function renderFilterSheet(){const avail=[...ALLF,...(D().group?['소속별']:[])].filter(f=>!FS.tabs.includes(f));
  sheet(`<div class="fsh"><div class="fhead"><b>필터 수정</b><button class="done" onclick="saveFilterSheet()">완료</button></div>
- <div class="fchips"><span class="fc">전체</span>${FS.tabs.map((t,i)=>`<span class="fc ed"><i class="grip">⠿</i>${t}<button class="fx" aria-label="${t} 빼기" onclick="FS.tabs.splice(${i},1);renderFilterSheet()">✕</button></span>`).join('')}</div>
- ${avail.length?`<div class="fdiv"></div><div class="h">더 넣을 수 있는 필터</div><div class="fchips">${avail.map(f=>`<button class="fa" onclick="FS.tabs.push('${f}');renderFilterSheet()"><i>+</i>${f}</button>`).join('')}</div>`:''}</div>`)}
+ <div class="fchips"><span class="fc">전체</span>${FS.tabs.map((t,i)=>`<span class="fc ed" data-t="${t}"><i class="grip">⠿</i>${t}<button class="fx" aria-label="${t} 빼기" onclick="FS.tabs.splice(${i},1);renderFilterSheet()">✕</button></span>`).join('')}</div>
+ ${avail.length?`<div class="fdiv"></div><div class="h">더 넣을 수 있는 필터</div><div class="fchips">${avail.map(f=>`<button class="fa" onclick="FS.tabs.push('${f}');renderFilterSheet()"><i>+</i>${f}</button>`).join('')}</div>`:''}</div>`);chipDrag(document.querySelector('.fsh .fchips'),'.fc.ed',FS.tabs,renderFilterSheet)}
 function saveFilterSheet(){const d=D();d.tabs=FS.tabs.slice();if(!d.tabs.includes(state.tab)&&state.tab!=='전체')state.tab='전체';closeDim();full();toast('필터를 저장했어요')}
-function saveSettings(){const d=D();Object.assign(d,{name:ED.name||d.name,s:ED.s,e:ED.e,label:ED.label,pal:ED.pal,cover:ED.cover,m:ED.m,tabs:ED.tabs,group:ED.group,pw:ED.pw,pwv:ED.pwv});if(!d.tabs.includes(state.tab))state.tab='전체';state.pal=ED.pal;closeOv('settings');full();toast('앨범 설정을 저장했어요')}
+function saveSettings(){const d=D();Object.assign(d,{name:ED.name||d.name,s:ED.s,e:ED.e,label:ED.label,pal:ED.pal,cover:ED.cover,m:ED.m,tabs:ED.tabs,group:ED.group,teams:ED.teams.map(x=>x.trim()).filter(Boolean),pw:ED.pw,pwv:ED.pwv});let added=false;if(d.group){if(d.teams.length<2)d.teams=['청팀','홍팀'];if(!d.tabs.includes('소속별')){const i=d.tabs.indexOf('인물별');d.tabs.splice(i>=0?i+1:d.tabs.length,0,'소속별');added=true}}else d.tabs=d.tabs.filter(x=>x!=='소속별');if(added){state.tab='소속별';state.tm=0}if(!d.tabs.includes(state.tab))state.tab='전체';state.pal=ED.pal;closeOv('settings');full();if(added){requestAnimationFrame(()=>{const y=$('#tabAnchor').offsetTop-98;$('#sc').scrollTo({top:y,behavior:'smooth'});const on=$('#tabs .chip.on');if(on)$('#tabs').scrollTo({left:on.offsetLeft-90,behavior:'smooth'})});toast(`'소속별' 필터를 추가했어요`)}else toast('앨범 설정을 저장했어요')}
 /* search + keyboard */
 const CHO='ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ',JUNG='ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ',JONG=['','ㄱ','ㄲ','ㄳ','ㄴ','ㄵ','ㄶ','ㄷ','ㄹ','ㄺ','ㄻ','ㄼ','ㄽ','ㄾ','ㄿ','ㅀ','ㅁ','ㅂ','ㅄ','ㅅ','ㅆ','ㅇ','ㅈ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
 const VV={'ㅗㅏ':'ㅘ','ㅗㅐ':'ㅙ','ㅗㅣ':'ㅚ','ㅜㅓ':'ㅝ','ㅜㅔ':'ㅞ','ㅜㅣ':'ㅟ','ㅡㅣ':'ㅢ'},CC={'ㄱㅅ':'ㄳ','ㄴㅈ':'ㄵ','ㄴㅎ':'ㄶ','ㄹㄱ':'ㄺ','ㄹㅁ':'ㄻ','ㄹㅂ':'ㄼ','ㄹㅅ':'ㄽ','ㄹㅌ':'ㄾ','ㄹㅍ':'ㄿ','ㄹㅎ':'ㅀ','ㅂㅅ':'ㅄ'};
@@ -4871,10 +4894,21 @@ let ceEdit=false,catDraft=null;const ceCat=()=>catCur<0?catDraft:CATS[catCur];
 function renderCatEdit(){const c=ceCat();const isNew=catCur<0;$('#ce-del').hidden=isNew;$('#ce-delcap').hidden=isNew;$('#ce-create').hidden=!isNew;
   $('#ce-done').textContent=ceEdit?'완료':'수정';$('#ce-done').classList.toggle('on',ceEdit);$('#ce-more').hidden=!ceEdit;$('#ce-title').textContent=c.n;$('#ce-n').value=c.n;$('#ce-dot').style.background=c.c;
   $('#ce-sw').innerHTML=CPAL.map(h=>`<button data-h="${h}" class="${(c.hex||'')===h?'on':''}" style="background:${h}" aria-label="색 ${h}"></button>`).join('');$$('#ce-sw button').forEach(b=>b.onclick=()=>{c.c=b.dataset.h;c.hex=b.dataset.h;renderCatEdit()});
-  $('#ce-on').innerHTML='<button class="fixed">전체</button>'+c.on.map((f,i)=>ceEdit?`<button data-r="${i}"><span class="grip">⠿</span>${f}<span class="x">✕</span></button>`:`<button class="fixed">${f}</button>`).join('');
+  $('#ce-on').innerHTML='<button class="fixed">전체</button>'+c.on.map((f,i)=>ceEdit?`<button data-r="${i}" data-t="${f}"><span class="grip">⠿</span>${f}<span class="x">✕</span></button>`:`<button class="fixed">${f}</button>`).join('');
   $('#ce-off').innerHTML=c.off.map((f,i)=>`<button data-a="${i}"><span>+</span>${f}</button>`).join('');
   $$('#ce-on [data-r]').forEach(b=>b.onclick=()=>{c.off.push(...c.on.splice(+b.dataset.r,1));renderCatEdit()});
-  $$('#ce-off [data-a]').forEach(b=>b.onclick=()=>{c.on.push(...c.off.splice(+b.dataset.a,1));renderCatEdit()})}
+  $$('#ce-off [data-a]').forEach(b=>b.onclick=()=>{c.on.push(...c.off.splice(+b.dataset.a,1));renderCatEdit()});if(ceEdit)chipDrag($('#ce-on'),'button[data-r]',c.on,renderCatEdit)}
+/* 필터 칩 순서 바꾸기: 왼쪽 ⠿ 손잡이를 끌거나, 손잡이에서 ←/→ 키 */
+function chipDrag(box,sel,arr,done){if(!box)return;const items=()=>[...box.querySelectorAll(sel)];
+ if(!box._dg){box._dg=1;box.addEventListener('click',e=>{if(box._dragged){e.stopImmediatePropagation();e.preventDefault();box._dragged=false}},true)}
+ items().forEach(chip=>{const g=chip.querySelector('.grip');if(!g)return;g.setAttribute('role','button');g.setAttribute('tabindex','0');g.setAttribute('aria-label',chip.dataset.t+' 순서 바꾸기');g.style.touchAction='none';g.style.cursor='grab';
+  g.addEventListener('keydown',e=>{if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight')return;e.preventDefault();const i=arr.indexOf(chip.dataset.t),j=i+(e.key==='ArrowLeft'?-1:1);if(i<0||j<0||j>=arr.length)return;arr.splice(j,0,arr.splice(i,1)[0]);done();const ng=[...box.parentNode?document.querySelectorAll(sel):[]].find(c=>c.dataset.t===chip.dataset.t);if(ng&&ng.querySelector('.grip'))ng.querySelector('.grip').focus()});
+  g.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();let moved=false;chip.classList.add('dragging');const D0=document;
+   const mv=ev=>{const el=document.elementFromPoint(ev.clientX,ev.clientY);const over=el&&el.closest(sel);if(!over||over===chip||!box.contains(over))return;const r=over.getBoundingClientRect();const after=(ev.clientY>r.bottom)||(ev.clientY>=r.top&&ev.clientX>r.left+r.width/2);box.insertBefore(chip,after?over.nextSibling:over);moved=true};
+   const up=()=>{D0.removeEventListener('pointermove',mv);D0.removeEventListener('pointerup',up);D0.removeEventListener('pointercancel',up);chip.classList.remove('dragging');box._dragged=true;setTimeout(()=>{box._dragged=false},0);
+    if(moved){const order=items().map(c=>c.dataset.t);arr.splice(0,arr.length,...order);done()}};
+   D0.addEventListener('pointermove',mv);D0.addEventListener('pointerup',up);D0.addEventListener('pointercancel',up)})})}
+(function(){const st=document.createElement('style');st.textContent='#ce-on button.dragging{opacity:.55;transform:scale(1.04)}';document.head.appendChild(st)})();
 $('#ce-n').oninput=()=>{const v=$('#ce-n').value.trim();if(v){ceCat().n=v;$('#ce-title').textContent=v}};
 $('#ce-done').onclick=()=>{ceEdit=!ceEdit;renderCatEdit();if(!ceEdit)toast('필터를 저장했어요')};
 $('#ce-del').onclick=()=>{const n=CATS[catCur].n;CATS.splice(catCur,1);go('cat');toast(`'${n}' 카테고리를 지웠어요. 앨범은 '기타'로 옮겼어요`)};
