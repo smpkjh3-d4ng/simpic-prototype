@@ -5,7 +5,16 @@
 - `index.html` — 초기 사용자 흐름 프로토타입 (DESIGN.md 적용). 온보딩부터 시작하고 앨범이 비어 있어요.
 - `existing-user.html` — 기존 사용자 프로토타입. 온보딩 없이 홈에서 시작하고 앨범(콜라보 카페, 상업공간 답사, 도쿄 우정여행, 속초 여행)·그룹·친구가 들어 있어요.
 
-브라우저에서 바로 열면 됩니다. GitHub Pages에서는 각각 `/simpic-prototype/`, `/simpic-prototype/existing-user.html` 주소로 열려요.
+## 바로 보기
+
+| 버전 | GitHub Pages | Claude 웹 페이지 |
+|---|---|---|
+| 처음 사용자 (`index.html`) | [열기](https://smpkjh3-d4ng.github.io/simpic-prototype/) | [열기](https://claude.ai/artifact/15DgRqbQ1666e5EwQpXYUi) |
+| 기존 사용자 (`existing-user.html`) | [열기](https://smpkjh3-d4ng.github.io/simpic-prototype/existing-user.html) | [열기](https://claude.ai/artifact/FD8rCeghtd55LzYhCgqy62) |
+
+- **GitHub Pages:** `main` 브랜치의 최신 파일이 그대로 열려요. 누구나 볼 수 있어요.
+- **Claude 웹 페이지:** 같은 최종본을 claude.ai에 올린 링크예요. 비공개라서 소유자가 공유한 사람만 열 수 있어요.
+- 파일을 내려받아 브라우저로 바로 열어도 돼요. 빌드 과정은 없어요.
 
 ## 디자인 문서
 
