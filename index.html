@@ -2102,7 +2102,7 @@ window.addEventListener('message',e=>{const m=e.data;if(!m||m.type!=='simpic-ope
   if(m.hex){const P0=PAL[d.pal];if(!P0||String(P0.sw).toUpperCase()!==String(m.hex).toUpperCase()){const id='h'+String(m.hex).replace('#','');if(!PAL[id]){const h=String(m.hex).replace('#',''),c=[0,2,4].map(i=>parseInt(h.substr(i,2),16)),l=c.map(v=>Math.round(255-(255-v)*.12));PAL[id]={n:'사용자 색',sw:m.hex,c1:'rgb('+l.join(',')+')',c2:'#F5F5F7',cx:m.hex,tint:'rgba('+l.join(',')+',.7)'};RIC[id]='flower'}d.pal=id}}
   
  if(m.cover){P.ext=m.cover;d.cover='ext'}
- if(m.tabs&&m.tabs.length){const t=[];m.tabs.forEach(x=>{const y=FMAP[x]||x;if(!t.includes(y))t.push(y)});d.tabs=t}
+ if(Array.isArray(m.tabs)){const t=[];m.tabs.forEach(x=>{const y=FMAP[x]||x;if(!t.includes(y))t.push(y)});d.tabs=t}
  if(m.ppl)d.ppl=m.ppl;
  state.p=k;state.pal=d.pal;state.tab=(d.tabs.includes('베스트컷')&&m.n!==0)?'베스트컷':'전체';state.pp=0;state.up=0;state.pl=-1;selMode(false);
  ['srch','settings','invite'].forEach(i=>$('#'+i).classList.remove('on'));closeDim();
@@ -4401,9 +4401,11 @@ const FSET={
   업무:{a:['좋아요한 사진','장소','날짜','문서','올린 사람'],e:['인물별','회차별','시간','베스트컷','셀카','음식·풍경']},
   기타:{a:['좋아요한 사진','베스트컷','날짜','장소','올린 사람'],e:['인물별','시간','음식·풍경','셀카','동물별','문서']}};
 let filtersFor=null;
-function aiFilters(){const f=FSET[S.purpose];S.active=[...(S.grpOn?['소속별']:[]),...f.a];S.extra=[...f.e];filtersFor=S.purpose+S.grpOn}
+const FALL=['좋아요한 사진','베스트컷','인물별','날짜','장소','올린 사람','시간','상황별','회차별','음식·풍경','셀카','굿즈','동물별','문서'];
+function aiFilters(){const f=FSET[S.purpose];if(!f){S.active=[...(S.grpOn?['소속별']:[])];S.extra=FALL.slice();filtersFor=S.purpose+S.grpOn;return}S.active=[...(S.grpOn?['소속별']:[]),...f.a];S.extra=[...f.e];filtersFor=S.purpose+S.grpOn}
 function renderFilters(force){if(force||filtersFor!==S.purpose+S.grpOn)aiFilters();
-  $('#l2').textContent='앨범 이름을 보고 사진 분류를 추천했어요. 켜 둔 분류가 앨범의 탭이 돼요.';drawChips()}
+  const own=!FSET[S.purpose];const at=document.querySelector('#s-2 .ai-top');if(at)at.hidden=own;
+  $('#l2').textContent=own?'새 카테고리는 전체만 켜 두었어요. 필요한 분류를 아래에서 넣어 주세요.':'앨범 이름을 보고 사진 분류를 추천했어요. 켜 둔 분류가 앨범의 탭이 돼요.';drawChips()}
 const IX='<span class="ic"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>'; /* 켜진 분류는 ✓ */
 const IP='<span class="ic"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>';
 function chipEl(t,act){const b=document.createElement('button');b.dataset.f=t;
