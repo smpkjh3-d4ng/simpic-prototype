@@ -2923,13 +2923,32 @@ SCREENS.scan1.after = () => {
   const svgEl = document.getElementById('crop'); if(!svgEl) return;
   let drag = null;
   const toLocal = e => { const pt = svgEl.createSVGPoint(); pt.x=e.clientX; pt.y=e.clientY; const p = pt.matrixTransform(svgEl.getScreenCTM().inverse()); return [Math.max(8,Math.min(342,Math.round(p.x))), Math.max(8,Math.min(432,Math.round(p.y)))]; };
-  svgEl.querySelectorAll('.hdl').forEach(h => h.addEventListener('pointerdown', e => { drag = +h.dataset.i; h.setPointerCapture(e.pointerId); h.style.cursor='grabbing'; }));
-  svgEl.addEventListener('pointermove', e => { if(drag===null) return; const p = toLocal(e); S.pts[drag]=p; S.auto=false;
+  // 돋보기: 모서리를 끄는 동안 손가락에 가려진 부분을 반대쪽 위에 크게 보여 줘요
+  const VB = svgEl.viewBox.baseVal, LS = 112, LZ = 2.5, LR = LS / LZ / 2;
+  let loupe = null;
+  const showLoupe = p => {
+    if(!loupe){
+      loupe = document.createElement('div'); loupe.setAttribute('aria-hidden','true');
+      loupe.style.cssText = `position: absolute; top: 12px; width: ${LS}px; height: ${LS}px; border-radius: 999px; overflow: hidden; border: 3px solid #FFFFFF; box-shadow: 0 6px 18px rgba(17,17,20,.35); background: #111114; pointer-events: none; z-index: 2`;
+      const bg = svgEl.previousElementSibling;
+      loupe.innerHTML = `<svg width="100%" height="100%" preserveAspectRatio="xMidYMid slice" style="display: block">${bg ? bg.innerHTML : ''}<polygon fill="none" stroke="#FFFFFF" stroke-width="${2.5/LZ}"></polygon><g stroke-width="${1.5/LZ}"><circle r="${6/LZ}" fill="none" stroke="#FFFFFF"></circle><circle r="${1.6/LZ}" fill="#7B61FF" stroke="none"></circle></g></svg>`;
+      svgEl.parentElement.appendChild(loupe);
+    }
+    // 손가락이 왼쪽 절반이면 오른쪽 위, 오른쪽 절반이면 왼쪽 위
+    if(p[0] < VB.width/2){ loupe.style.right='12px'; loupe.style.left=''; } else { loupe.style.left='12px'; loupe.style.right=''; }
+    const s = loupe.firstChild;
+    s.setAttribute('viewBox', `${p[0]-LR} ${p[1]-LR} ${LR*2} ${LR*2}`);
+    s.querySelector('polygon').setAttribute('points', S.pts.map(q=>q.join(',')).join(' '));
+    s.querySelector('g').setAttribute('transform', `translate(${p[0]} ${p[1]})`);
+  };
+  const hideLoupe = () => { if(loupe){ loupe.remove(); loupe=null; } };
+  svgEl.querySelectorAll('.hdl').forEach(h => h.addEventListener('pointerdown', e => { drag = +h.dataset.i; h.setPointerCapture(e.pointerId); h.style.cursor='grabbing'; showLoupe(S.pts[drag]); }));
+  svgEl.addEventListener('pointermove', e => { if(drag===null) return; const p = toLocal(e); S.pts[drag]=p; S.auto=false; showLoupe(p);
     const P=S.pts; document.getElementById('poly').setAttribute('points', P.map(q=>q.join(',')).join(' '));
     document.getElementById('hole').setAttribute('d', `M0 0H350V440H0Z M${P[0]} L${P[3]} L${P[2]} L${P[1]}Z`);
     const c = svgEl.querySelectorAll('.hdl')[drag]; c.setAttribute('cx',p[0]); c.setAttribute('cy',p[1]);
     const d = document.getElementById('h'+drag); d.setAttribute('cx',p[0]); d.setAttribute('cy',p[1]); });
-  const end = () => { if(drag!==null){ drag=null; render(true); } };
+  const end = () => { hideLoupe(); if(drag!==null){ drag=null; render(true); } };
   svgEl.addEventListener('pointerup', end); svgEl.addEventListener('pointercancel', end);
 };
 SCREENS.scan2.after = () => {
